@@ -6,7 +6,15 @@ from django.contrib.auth.hashers import make_password # type: ignore
 from rest_framework import status # type: ignore
 from .serializer import signupserializer 
 from rest_framework.permissions import IsAuthenticated # type: ignore
+from rest_framework import serializers
+from django.contrib.auth.models import User
 
+
+class Userserializer(serializers.ModelSerializer):
+            class Meta:
+                model=User
+                fields=('first_name','last_name','email','password')
+                
 @api_view(['POST'])
 def register(request):
     data=request.data
@@ -33,7 +41,7 @@ def current_user(request):
     return Response(user.data)
 
    
-@api_view(['GET'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_user(request):
     user=request.user
@@ -45,4 +53,6 @@ def update_user(request):
     if data['password'] != '':
         user.password=make_password(data['password'])
     user.save()
-    return Response({"message":"user updated"})
+    serializer=Userserializer(user,many=False)
+    return Response({"message":"user updated",
+                     "user":serializer.data})
