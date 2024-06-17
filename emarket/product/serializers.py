@@ -6,7 +6,7 @@ class productSerializer(serializers.ModelSerializer):
         model = product
         fields = '__all__'
         
-class productSerializer(serializers.ModelSerializer):
+class reviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = review
         fields = '__all__'
